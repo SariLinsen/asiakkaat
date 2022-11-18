@@ -5,10 +5,18 @@
 <head>
 <meta charset="ISO-8859-1">
 <script src="scripts/main.js"></script>
-<title>Insert title here</title>
+<title>Asiakkaat</title>
+<style>
+.tyyli {
+	border: 5px outset black;
+	background-color: lightgreen;
+	text-align: center;
+}
+</style>
 </head>
 <body>
-<table id="listaus">
+<h2>Hae alla olevista asiakkaista</h2>
+<table id="listaus" class="tyyli">
 	<thead>
 		<tr>
 			<th>Hakusana:</th>
