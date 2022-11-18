@@ -1,5 +1,5 @@
 function haeAsiakkaat() {
-	let url = "Asiakkaat";
+	let url = "Asiakkaat?hakusana=" + document.getElementById("hakusana").value;
 	let requestOptions = {
 			method: "GET",
 			headers: { "Content-type": "application/x-www-form-urlencoded" }
