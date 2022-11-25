@@ -1,4 +1,4 @@
-@charset "ISO-8859-1";
+@charset "UTF-8";
 table {
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 	border-collapse: collapse;
@@ -30,9 +30,15 @@ table th {
 
 .oikealle {
 	text-align: right;
+	
 }
 
 #uusiAsiakas, #takaisin {
 	color: white;
 	cursor: pointer;
+}
+
+#linkki {
+	color: white;
+	text-decoration: none;
 }
