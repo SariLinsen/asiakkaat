@@ -5,11 +5,12 @@
 <head>
 <meta charset="UTF-8">
 <script src="scripts/main.js"></script>
+<script src="scripts/io.js"></script>
 <link rel="stylesheet" type="text/css" href="css/main.css">
 <title>Asiakkaiden haku</title>
 
 </head>
-<body>
+<body onload="asetaFocus('hakusana')" onkeydown="tutkiKey(event, 'listaa')">
 <h2>Asiakkaat</h2>
 <table id="listaus">
 	<thead>

@@ -6,35 +6,15 @@ function serialize_form(form) {
 	);
 }
 
-function haeAsiakkaat() {
-	let url = "Asiakkaat?hakusana=" + document.getElementById("hakusana").value;
-	let requestOptions = {
-			method: "GET",
-			headers: { "Content-type": "application/x-www-form-urlencoded" }
-	};
-	fetch(url, requestOptions)
-	.then(response => response.json()) //Muutetaan vastausteksti json-objektiksi
-	.then(response => printItems(response))
-	.catch(errorText => console.error("Fetch failed: " + errorText));
-}
-
-//Kirjoitetaan tiedot taulukkoon JSON-objektilistasta
-function printItems(respObjList) {
-	//console.log(respObjList);
-	let htmlStr="";
-	for(let item of respObjList) {
-		htmlStr+="<tr id='rivi_" + item.asiakas_id+"'>";
-		htmlStr+="<td>"+item.etunimi+"</td>";
-		htmlStr+="<td>"+item.sukunimi+"</td>";
-		htmlStr+="<td>"+item.puhelin+"</td>";
-		htmlStr+="<td>"+item.sposti+"</td>";
-		htmlStr+="<td><span class='poista' onclick=varmistaPoisto('"+item.asiakas_id+"','"+encodeURI(item.etunimi)+ "')>Poista</span></td>";
-		
-		//htmlStr+="<td><a href='muutaasiakas.jsp?id=" + item.asiakas_id+"'>Muuta</a>&nbsp;";
-		//htmlStr+="<span class='poista' onclick=varmistaPoisto('"+item.asiakas_id+"','"+encode
-		htmlStr+="</tr>";		
+function requestURLParam(sParam) {
+	let sPageURL = window.location.search.substring(1);
+	let sURLVariables = sPageURL.split("&");
+	for (let i = 0; i < sURLVariables.length; i++) {
+		let sParameterName = sURLVariables[i].split("=");
+		if(sParameterName[0] == sParam) {
+			return sParameterName[1];
+		}
 	}
-	document.getElementById("tbody").innerHTML = htmlStr;
 }
 
 function tutkiJaLisaa(){
@@ -42,7 +22,11 @@ function tutkiJaLisaa(){
 		lisaaTiedot();
 	}
 }
-
+function tutkiJaPaivita(){
+	if (tutkiTiedot()) {
+		paivitaTiedot();
+	}
+}
 function tutkiTiedot() {
 	let ilmo="";	
 	if(document.getElementById("etunimi").value.length<2) {
@@ -54,7 +38,7 @@ function tutkiTiedot() {
 	} else if (document.getElementById("puhelin").value.length<5) {
 		ilmo="Puhelinnumero ei kelpaa!";
 		document.getElementById("puhelin").focus();
-	} else if (document.getElementById("sposti").value.length<5) {
+	} else if (document.getElementById("sposti").value.length<8 || document.getElementById("sposti").value.indexOf(".") == -1 || document.getElementById("sposti").value.indexOf("@")==-1) {
 		ilmo="Sähköposti ei kelpaa!";
 		document.getElementById("sposti").focus();
 	}
@@ -74,66 +58,38 @@ function tutkiTiedot() {
 function siivoa(teksti) {
 	teksti=teksti.replace(/</g, "");
 	teksti=teksti.replace(/>/g, "");
+	teksti=teksti.replace(/;/g, "");
 	teksti=teksti.replace(/'/g, "''");
 	return teksti;
 }
 
-function lisaaTiedot() {
-	let formData = serialize_form(lomake);
-	//console.log(formData);
-	let url = "Asiakkaat";
-	let requestOptions = {
-		method: "POST",
-		headers: {"Content-Type": "application/json"},
-		body: formData
-	};
-	fetch(url, requestOptions)
-	.then(response => response.json()) //Muutetaan vastausteksti JSON-objektiksi
-	.then(responseObj => {
-		console.log(responseObj);
-		if(responseObj.response==0) {
-			document.getElementById("ilmo").innerHTML = "Asiakkaan lisäys epäonnistui.";
-		} else if (responseObj.response==1) {
-			document.getElementById("ilmo").innerHTML = "Asiakkaan lisäys onnistui.";
-			document.lomake.reset(); //lomakkeen tyhjennys lisäyksen jälkeen
-		}
-		setTimeout(function(){document.getElementById("ilmo").innerHTML="";}, 3000);
-	})
-	.catch(errorText => console.error("Fetch failed: " + errorText));
-}
 
-function varmistaPoisto(asiakas_id, etunimi) {
-	if (confirm("Poista asiakas " + decodeURI(etunimi) + "?")) {
-		poistaAuto(asiakas_id, encodeURI(etunimi));
+
+function varmistaPoisto(asiakas_id, nimi) {
+	if (confirm("Poista asiakas " + decodeURI(nimi) + "?")) {
+		poistaAsiakas(asiakas_id, nimi);
 	}
 }
 
-function poistaAuto(asiakas_id, etunimi) {
-	let url = "Asiakkaat?asiakas_id=" + asiakas_id;
-	let requestOptions = {
-		method: "DELETE"
-	};
-	fetch(url, requestOptions)
-	.then(response => response.json())
-	.then(responseObj => {
-		console.log(responseObj);
-		if(responseObj.response==0) {
-			alert ("Asiakkaan poisto epäonnistui.");
-		} else if (responseObj.response==1) {
-			document.getElementById("rivi_"+asiakas_id).style.backgroundColor="red";
-			alert ("Asiakkaan " + decodeURI(etunimi)+ " poisto onnistui.");
+function asetaFocus(target) {
+	document.getElementById(target).focus();
+}
+
+//Funktio enter-nappiin, kutsu bodyn okeydown()-metodista
+function tutkiKey(event, target) {
+	console.log(event.keyCode);
+	if(event.keyCode==13) { //13=enter
+		if(target=="listaa") {
 			haeAsiakkaat();
-		}
-	})
-	.catch(errorText => console.error("Fetch failed: " + errorText));
-}	
-	
-
-
-
-
-
-
+		} else if (target=="lisaa") {
+			tutkiJaLisaa();
+		} else if (target=="paivita") {
+			tutkiJaPaivita();
+		}		
+	} else if(event.keyCode==113) { //F2
+		document.location="listaaasiakkaat.jsp";
+	}
+}
 
 
 
