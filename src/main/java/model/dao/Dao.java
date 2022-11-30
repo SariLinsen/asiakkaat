@@ -1,5 +1,6 @@
 package model.dao;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -20,8 +21,9 @@ public class Dao {
 	private Connection yhdista() {
 		Connection con = null;
 		String path = System.getProperty("catalina.base");
+		path = new File(System.getProperty("user.dir")).getParentFile().toString() +"\\";
 		//System.out.println(path);
-		path = path.substring(0, path.indexOf(".metadata")).replace("\\", "/");
+		//path = path.substring(0, path.indexOf(".metadata")).replace("\\", "/");
 		String url = "jdbc:sqlite:" + path + db;
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -192,6 +194,25 @@ public class Dao {
 			stmtPrep.setString(3, asiakas.getPuhelin());
 			stmtPrep.setString(4, asiakas.getSposti());
 			stmtPrep.setInt(5, asiakas.getAsiakas_id());
+			stmtPrep.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+			paluuArvo = false;
+		} finally {
+			sulje();
+		}
+		return paluuArvo;
+	}
+	
+	public boolean removeAllItems(String pwd) {
+		boolean paluuArvo = true;
+		if(!pwd.equals("Nimda")) {
+			return false;
+		}
+		sql ="DELETE FROM Asiakkaat";
+		try {
+			con = yhdista();
+			stmtPrep = con.prepareStatement(sql);
 			stmtPrep.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
