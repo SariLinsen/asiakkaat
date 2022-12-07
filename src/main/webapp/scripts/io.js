@@ -2,7 +2,7 @@ function haeAsiakkaat() {
 	let url = "Asiakkaat?hakusana=" + document.getElementById("hakusana").value;
 	let requestOptions = {
 			method: "GET",
-			headers: { "Content-type": "application/x-www-form-urlencoded" }
+			headers: { "Content-type": "application/x-www-form-urlencoded; charset=UTF-8" }
 	};
 	fetch(url, requestOptions)
 	.then(response => response.json()) //Muutetaan vastausteksti json-objektiksi
@@ -12,7 +12,7 @@ function haeAsiakkaat() {
 
 //Kirjoitetaan tiedot taulukkoon JSON-objektilistasta
 function printItems(respObjList) {
-	//console.log(respObjList);
+	console.log(respObjList);
 	let htmlStr="";
 	for(let item of respObjList) {
 		htmlStr+="<tr id='rivi_" + item.asiakas_id+"'>";
@@ -27,7 +27,7 @@ function printItems(respObjList) {
 	document.getElementById("tbody").innerHTML = htmlStr;
 }
 function lisaaTiedot() {
-	let formData = serialize_form(lomake);
+	let formData = serialize_form(document.lomake);
 	//console.log(formData);
 	let url = "Asiakkaat";
 	let requestOptions = {
@@ -74,7 +74,7 @@ function haeAsiakas() {
 	console.log(url);
 	let requestOptions = {
 		method: "GET",
-		headers: { "Content-Type": "application/x-www-form-urlencoded" }
+		headers: { "Content-Type": "application/x-www-form-urlencoded, charset=UTF-8" }
 	};
 	fetch(url, requestOptions)
 	.then(response => response.json())
@@ -103,9 +103,9 @@ function paivitaTiedot() {
 	.then(responseObj => {
 		console.log(responseObj);
 		if (responseObj.response == 0) {
-			document.getElementById("ilmo").innerHTML = "Asiakkaan muutos epäonnistui.";
+			document.getElementById("ilmo").innerHTML = "Asiakkaan tietojen muutos epäonnistui.";
 		} else if (responseObj.response==1) {
-			document.getElementById("ilmo").innerHTML = "Asiakkaan muutos onnistui.";
+			document.getElementById("ilmo").innerHTML = "Asiakkaan tietojen muutos onnistui.";
 			document.lomake.reset(); 
 		}
 	})

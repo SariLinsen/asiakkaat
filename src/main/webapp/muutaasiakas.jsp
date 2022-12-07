@@ -1,5 +1,6 @@
+<%@include file="header.jsp" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="ISO-8859-1"%>
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,7 +21,7 @@
 				<th>Etunimi</th>
 				<th>Sukunimi</th>
 				<th>Puhelin</th>
-				<th>Sähköposti</th>
+				<th>SÃ¤hkÃ¶posti</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -30,15 +31,15 @@
 				<td><input type="text" name="sukunimi" id="sukunimi" /></td>
 				<td><input type="text" name="puhelin" id="puhelin" /></td>
 				<td><input type="text" name="sposti" id="sposti" /></td>
-				<td><input type="button" value="Hyväksy" onclick="tutkiJaPaivita()" /></td>
+				<td><input type="button" value="HyvÃ¤ksy" onclick="tutkiJaPaivita()" /></td>
 			</tr>	
 		</tbody>
 	</table>
 	<input type="hidden" name="asiakas_id" id="asiakas_id">
 </form>
 <p id="ilmo"></p>
-</body>
 <script>
 haeAsiakas();
 </script>
+</body>
 </html>

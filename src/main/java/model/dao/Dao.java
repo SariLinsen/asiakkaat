@@ -20,10 +20,11 @@ public class Dao {
 	
 	private Connection yhdista() {
 		Connection con = null;
-		String path = System.getProperty("catalina.base");
-		path = new File(System.getProperty("user.dir")).getParentFile().toString() +"\\";
+		String path = System.getProperty("catalina.base"); 
+		//path = new File(System.getProperty("user.dir")).getParentFile().toString() +"\\"; testausta varten
 		//System.out.println(path);
-		//path = path.substring(0, path.indexOf(".metadata")).replace("\\", "/");
+		//path = path.substring(0, path.indexOf(".metadata")).replace("\\", "/"); //eclipsessä
+		path += "/webapps/"; //tuotannossa, laita tietokanta webapps-kansioon
 		String url = "jdbc:sqlite:" + path + db;
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -221,6 +222,29 @@ public class Dao {
 			sulje();
 		}
 		return paluuArvo;
+	}
+	
+	public String findUser(String uid, String pwd) {
+		String nimi = null;
+		sql = "SELECT * FROM asiakkaat WHERE sposti=? AND salasana=?";
+		try {
+			con = yhdista();
+			if (con!=null) {
+				stmtPrep = con.prepareStatement(sql);
+				stmtPrep.setString(1, uid);
+				stmtPrep.setString(2, pwd);
+				rs = stmtPrep.executeQuery();
+				if(rs.isBeforeFirst()) {
+					rs.next();
+					nimi = rs.getString("etunimi") + " " + rs.getString("sukunimi");
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sulje();
+		}
+		return nimi;
 	}
 }
 
